@@ -91,10 +91,13 @@ df_year %>%
   aes(x = `Released Year`, y = Selling, size = Selling, color = Company) +
   geom_point() +
   labs(title = "Selling by Release Year", x = "Release Year", y = "Selling (in millions)") +
-  transition_time(`Released Year`) +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  labs(title = "Year: {frame_time}")
+  theme_bw()
+  
+  # transition_time(`Released Year`) +
+  # theme(plot.title = element_text(hjust = 0.5)) +
+  # labs(title = "Year: {frame_time}")
 ```
+
 
 ```{r}
 

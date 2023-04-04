@@ -1,6 +1,7 @@
 library(tidyverse)
-install.packages("echarts4r")
+# install.packages("echarts4r")
 library(echarts4r)
+library(gganimate)
 
 
 game_data %>% 
@@ -22,3 +23,13 @@ mtcars |>
   e_line(mpg) |>
   e_data(points, qsec) |>
   e_scatter(mpg, color = "red", symbol_size = 20)
+
+
+df_year %>% 
+  ggplot() +
+  aes(x = `Released Year`, y = Selling, size = Selling, color = Company) +
+  geom_point() +
+  labs(title = "Selling by Release Year", x = "Release Year", y = "Selling (in millions)") +
+  transition_time(`Released Year`) +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(title = "Year: {frame_time}")
