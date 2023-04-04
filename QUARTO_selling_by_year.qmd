@@ -1,0 +1,133 @@
+---
+title: "Best Selling Game Consoles"
+format:
+  html:
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, error = FALSE, warning = FALSE,
+                      message = FALSE)
+```
+
+```{r, echo=FALSE}
+# Loading packages
+library(tidyverse)
+library(gganimate)
+library(knitr)
+library(gifski)
+```
+
+```{r, echo=FALSE}
+# Importing dataset
+
+pwd <- getwd() # sets the current working directory
+pwd
+
+filepath <- paste(pwd, "/data-raw/best-selling game consoles.csv", sep="") # Make sure you fix this separator, it's a space by default
+filepath
+
+game_data <- read_csv(filepath , col_names = T)
+# data_import %>% View
+
+```
+
+## Objective
+
+Analyze the total selling of consoles along the year separated by company.
+
+### Steps:
+
+1) Import the data
+2) Organize the table to present the total per year by company.
+3) Plot a animated chart showning the total selling across the years.
+
+## About Dataset
+
+### Description:
+
+This [dataset](https://www.kaggle.com/datasets/tayyarhussain/best-selling-game-consoles-of-all-time?select=best-selling+game+consoles.csv) contains information about the best-selling game consoles of all time. The data includes the console name, manufacturer, release year, total units sold, and some other information. The dataset covers a wide range of consoles, from the earliest releases to the current generation of consoles.
+
+### Columns:
+
+- Console Name: The name of the game console.
+- Type: The type of console (e.g., home console, handheld console).
+- Company: The company that manufactured the console.
+- Released Year: The year in which the console was first released.
+- Discontinuation Year: The year in which the console was discontinued (if applicable).
+- Units Sold (million): The total number of units sold worldwide, in millions.
+- Remarks: Any additional remarks or comments about the console (if applicable).
+
+The dataset can be used to analyze the popularity of different game consoles over time. It can also be used to identify trends in the gaming industry and to compare the performance of different manufacturers. Researchers, game developers, and marketers can benefit from this dataset to make informed decisions based on the past performance of game consoles in the market.
+
+```{r}
+#|echo: TRUE
+game_data %>% head %>% kable
+```
+
+## Data Wrangling
+
+Total selling per company by year.
+
+```{r}
+df_year <- game_data %>% 
+  group_by(`Released Year`,Company) %>% 
+  summarise(
+    Selling = sum(`Units sold (million)` ) 
+  )
+
+df_year %>% arrange(desc(`Released Year`)) %>%  kable
+```
+
+
+## Visualization
+
+Total selling across the years
+
+```{r}
+
+df_year %>% 
+  ggplot() +
+  aes(x = `Released Year`, y = Selling, size = Selling, color = Company, alpha=0.3) +
+  geom_point() +
+  labs(title = "Selling by Release Year", x = "Release Year", y = "Selling (in millions)") +
+  theme_bw()
+  
+  # transition_time(`Released Year`) +
+  # theme(plot.title = element_text(hjust = 0.5)) +
+  # labs(title = "Year: {frame_time}")
+```
+
+
+```{r}
+
+df_year %>% 
+  group_by(`Released Year`) %>% 
+  summarise(
+    Selling = sum(Selling)
+  ) %>% 
+  ggplot(aes(x = `Released Year`, y = Selling, size=Selling)) +
+  geom_point(color="royalblue", alpha=0.5)+
+    labs(title = "Total selling along the released years")+
+  theme_bw()
+
+
+
+```
+
+```{r}
+df_year %>% 
+  group_by(`Released Year`) %>% 
+  summarise(
+    Selling = sum(Selling)
+  ) %>% 
+  ggplot(aes(x = `Released Year`, y = Selling)) +
+  geom_line(color="royalblue", alpha=0.5, linewidth=1)+
+  geom_point(color="royalblue")+
+  labs(title = "Total selling along the released years")+
+  theme_bw()
+```
+
+
+
+

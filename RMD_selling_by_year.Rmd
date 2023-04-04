@@ -16,7 +16,7 @@ library(knitr)
 library(gifski)
 ```
 
-```{r}
+```{r, echo=FALSE}
 # Importing dataset
 
 pwd <- getwd() # sets the current working directory
