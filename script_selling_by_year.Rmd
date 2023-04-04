@@ -1,16 +1,14 @@
 ---
 title: "Best Selling Game Consoles"
-author: "Bruno"
-date: "4/2/2023"
 output: html_document
 ---
 
-```{r setup, include=FALSE, echo=FALSE, warning=FALSE, error=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, error = FALSE, warning = FALSE,
+                      message = FALSE)
 ```
 
 ```{r}
-#|echo: False
 # Loading packages
 library(tidyverse)
 library(gganimate)
@@ -88,7 +86,7 @@ Total selling across the years
 
 df_year %>% 
   ggplot() +
-  aes(x = `Released Year`, y = Selling, size = Selling, color = Company) +
+  aes(x = `Released Year`, y = Selling, size = Selling, color = Company, alpha=0.3) +
   geom_point() +
   labs(title = "Selling by Release Year", x = "Release Year", y = "Selling (in millions)") +
   theme_bw()
@@ -106,12 +104,26 @@ df_year %>%
   summarise(
     Selling = sum(Selling)
   ) %>% 
-  ggplot() +
-  aes(x = `Released Year`, y = Selling, size=Selling) +
-  geom_point()+
+  ggplot(aes(x = `Released Year`, y = Selling, size=Selling)) +
+  geom_point(color="royalblue", alpha=0.5)+
+    labs(title = "Total selling along the released years")+
   theme_bw()
 
 
 
 ```
+
+```{r}
+df_year %>% 
+  group_by(`Released Year`) %>% 
+  summarise(
+    Selling = sum(Selling)
+  ) %>% 
+  ggplot(aes(x = `Released Year`, y = Selling)) +
+  geom_line(color="royalblue", alpha=0.5, linewidth=1)+
+  geom_point(color="royalblue")+
+  labs(title = "Total selling along the released years")+
+  theme_bw()
+```
+
 
